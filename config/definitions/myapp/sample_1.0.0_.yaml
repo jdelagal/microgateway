@@ -1,0 +1,30 @@
+swagger: '2.0'
+info:
+  x-ibm-name: testing
+  title: sample
+  version: 1.0.0
+basePath: /sample
+paths:
+  /echo:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+x-ibm-configuration:
+  assembly:
+    execute:
+      - javascript:
+          title: javascript
+          version: 1.0.0
+          source: "message.body = { text : 'Hello World'};\r\n"
+    catch:
+      - errors: []
+        execute: []
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  gateway: micro-gateway
+schemes:
+  - http

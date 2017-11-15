@@ -1,0 +1,30 @@
+swagger: '2.0'
+info:
+  x-ibm-name: audit
+  title: audit
+  version: 1.0.0
+schemes:
+  - https
+basePath: /audit
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - javascript:
+          title: javascript
+          version: 1.0.0
+          source: "message.body = { text : 'Hello World'};\n\n\"use strict\";\n \nfunction asyncSqrt(value, callback) {\n    console.log('START execution with value =', value);\n    setTimeout(function() {\n        callback(value, value * value);\n    }, 0 | Math.random() * 100);\n}\n \nasyncSqrt(2, function(value, result) {\n    console.log('END execution with value =', value, 'and result =', result);\n});\nconsole.log('COMPLETED ?');"
+    catch: []
+  phase: realized
+  gateway: micro-gateway
+paths:
+  /echo:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+definitions: {}
+tags: []

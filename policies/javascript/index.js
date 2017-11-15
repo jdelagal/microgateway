@@ -5,6 +5,7 @@
 'use strict';
 var vm = require('vm');
 var _ = require('lodash');
+var fetch = require('node-fetch');
 
 function consoleProxy(log) {
   // Create a console API proxy around Bunyan-based flow logger
@@ -56,14 +57,23 @@ module.exports = function(config) {
   var javascriptPolicyHandler = function(props, context, flow) {
     var logger = flow.logger;
     logger.debug('ENTER javascript policy');
-
+    for (var n = 0; n <= 10; n++) {
+      fetch('http://192.168.99.1:8089/archibus/cxf/ReservesRm')
+            .then(res => res.text())
+            .then(body => console.log(body));
+    }
     if (_.isUndefined(props.source) || !_.isString(props.source)) {
       flow.fail({ name: 'JavaScriptError', value: 'Invalid JavaScript code' });
       return;
     }
     // need to wrap the code snippet into a function first
     try {
+      console.log('props.source: ',typeof (props.source));
+      var str = "Visit Microsoft!";
+      var res = str.replace("Microsoft", "W3Schools");
+
       var script = new vm.Script('(function() {' + props.source + '\n})()');
+
       // use context as this to run the wrapped function
       // and also console for logging
       var origProto = Object.getPrototypeOf(context);

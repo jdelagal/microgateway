@@ -1,0 +1,21 @@
+info:
+  version: 1.0.0
+  title: http
+  x-ibm-name: http
+  description: https test suite
+basePath: /http
+swagger: '2.0'
+paths:
+  /http:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+x-ibm-configuration:
+  assembly:
+    execute:
+      - asyncinvoke:
+          title: asyncinvoke
+          target-url: 'http://192.168.99.1:8089/archibus/cxf/ReservesRm'
+schemes:
+  - http
