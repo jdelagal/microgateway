@@ -92,9 +92,11 @@ module.exports = function(config) {
       var requestParams = jsonCont.vrequest.parameters
       console.log('requestParams: ',requestParams);
       p=0;
-      var respuesta = {"name": "respuesta","campos": []};
-      // Definition to the JSON type 
-      //var jsonRespuesta = JSON.parse(respuesta);
+      var respuesta = new Object;
+      respuesta.nombre="respuesta";
+      respuesta.campos=[];
+      respuesta.campos.push("sample");
+      console.log('respuesta: ',respuesta);
       for (var p in parameters) {
         if (parameters[p].required === true){
           q=0;
