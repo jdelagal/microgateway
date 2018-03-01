@@ -71,8 +71,6 @@ module.exports = function(config) {
       console.log('ini');
       //cargar JSON
       // Defining the JSON File 
-      
-      console.log("\n *STARTING* \n"); 
 
       // Getting the content from the file 
       var contenido= files.readFileSync("printVariables.json"); 
@@ -87,6 +85,30 @@ module.exports = function(config) {
       var resource = jsonCont.vapi.operation.path;
       console.log('resource: ',resource);
 
+      //queremos validar que los paramatros son los que tienen que ser
+      var parameters = jsonCont.vapi.document.paths[resource][verb].parameters;
+      console.log('parameters: ',parameters);
+
+      var requestParams = jsonCont.vrequest.parameters
+      console.log('requestParams: ',requestParams);
+      p=0;
+      var respuesta = {"name": "respuesta","campos": []};
+      // Definition to the JSON type 
+      //var jsonRespuesta = JSON.parse(respuesta);
+      for (var p in parameters) {
+        if (parameters[p].required === true){
+          q=0;
+          var existe = false;
+          var msgsKeys = Object.keys(requestParams);
+          for (var q in msgsKeys) {
+            if (parameters[p].name === msgsKeys[q]){
+              existe=true;
+              console.log(existe);
+            }
+          }
+        }
+      }
+      /*
       //definition
       var definition = jsonCont.vapi.document.paths[resource][verb].responses['200'].schema.$ref;
       console.log('definition: ',definition);
@@ -98,9 +120,12 @@ module.exports = function(config) {
       var responseDefinition = jsonCont.vapi.document.definitions[definitionName];
       console.log('responseDefinition: ', responseDefinition);
 
-      recursiveDefinition(responseDefinition);
+      responseDefinition = recursiveDefinition(responseDefinition);
+      */
 
-      //responseDefinition contiene los
+
+
+      //responseDefinition contiene toda la definicion referente al request 200
 
       //Recursive definition constructor
       function recursiveDefinition(definition) {
@@ -155,6 +180,8 @@ module.exports = function(config) {
           }
         }
       }
+
+      //fin
     }
     
     // End Recursive definition constructor
