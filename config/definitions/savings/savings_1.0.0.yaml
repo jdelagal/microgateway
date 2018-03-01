@@ -1,0 +1,67 @@
+swagger: '2.0'
+info:
+  x-ibm-name: savings
+  title: savings
+  version: 1.0.0
+  description: Savings plan estimator to calculate growth from compound interest
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /savings
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions: {}
+security: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: 'http://savingsample.mybluemix.net/api/Plans/estimate?deposit=300&rate=0.04&years=20'
+    catch: []
+  gateway: micro-gateway
+  phase: realized
+paths:
+  /Plans/estimate:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/plan-result'
+      description: Calculate savings growth with annual compounding
+      parameters:
+        - name: deposit
+          type: number
+          required: true
+          in: query
+          description: Annual deposits
+          format: float
+        - name: rate
+          type: number
+          required: true
+          in: query
+          description: Interest rate
+          format: float
+        - name: years
+          type: integer
+          required: true
+          in: query
+          description: Years of saving
+          format: int64
+definitions:
+  plan-result:
+    properties:
+      balance:
+        type: number
+        description: Account balance
+        format: float
+        example: 8933.42
+    additionalProperties: false
+    description: Calculated result from savings plan
+tags: []

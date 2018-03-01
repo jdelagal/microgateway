@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "eslint .",
-    "start": "node .",
+    "start": "nodemon sample.js",
     "test": "mocha -t 600000"
   },
   "engines": {
@@ -117,6 +117,7 @@
     "moment": "^2.11.2",
     "multer": "^1.1.0",
     "node-fetch": "^1.7.3",
+    "nodemon": "^1.17.1",
     "osenv": "^0.1.3",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",

@@ -1,0 +1,233 @@
+{
+  "msg": "VARIABLES API CONNECT",
+  "vapi": {
+    "name": "weather-provider-api",
+    "root": "",
+    "operation": {
+      "id": "",
+      "path": "/today"
+    },
+    "endpoint": {
+      "address": "172.19.0.2",
+      "hostname": "datapower"
+    },
+    "org": {
+      "id": "5a81b6b8e4b0c57e468565d2",
+      "name": "factoriaustglobal"
+    },
+    "type": "REST",
+    "version": "1.0.0",
+    "properties": "",
+    "document": {
+      "swagger": "2.0",
+      "info": {
+        "title": "Weather Provider API",
+        "version": "1.0.0",
+        "x-ibm-name": "weather-provider-api"
+      },
+      "host": "myweatherprovider.mybluemix.net",
+      "schemes": [
+        "https"
+      ],
+      "basePath": "/",
+      "produces": [
+        "application/json"
+      ],
+      "paths": {
+        "/current": {
+          "get": {
+            "summary": "Current Weather",
+            "parameters": [
+              {
+                "name": "zipcode",
+                "in": "query",
+                "description": "A valid 5-digit US zip code",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Success",
+                "schema": {
+                  "$ref": "#/definitions/Current"
+                }
+              }
+            }
+          }
+        },
+        "/today": {
+          "get": {
+            "summary": "Today's Weather",
+            "parameters": [
+              {
+                "name": "zipcode",
+                "in": "query",
+                "description": "A valid 5-digit US zip code",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Profile information for a user",
+                "schema": {
+                  "$ref": "#/definitions/Today"
+                }
+              }
+            }
+          }
+        }
+      },
+      "definitions": {
+        "Today": {
+          "type": "object",
+          "properties": {
+            "zip": {
+              "type": "string"
+            },
+            "hi": {
+              "type": "integer"
+            },
+            "lo": {
+              "type": "integer"
+            },
+            "nightHumidity": {
+              "type": "integer"
+            },
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "dayHumidity": {
+              "type": "integer"
+            }
+          }
+        },
+        "Current": {
+          "type": "object",
+          "properties": {
+            "zip": {
+              "type": "string"
+            },
+            "temperature": {
+              "type": "integer"
+            },
+            "humidity": {
+              "type": "integer"
+            },
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "x-ibm-configuration": {
+        "enforced": true,
+        "testable": true,
+        "phase": "realized",
+        "cors": {
+          "enabled": true
+        },
+        "assembly": {},
+        "gateway": "datapower-gateway"
+      },
+      "consumes": [
+        "application/json"
+      ]
+    }
+  },
+  "vplan": {
+    "name": "",
+    "id": "",
+    "version": "",
+    "rate-limit": "unlimited",
+    "hard-limit": "false",
+    "shared": "false"
+  },
+  "vclient": {
+    "app": {
+      "name": "",
+      "id": "",
+      "secret": ""
+    },
+    "org": {
+      "id": "",
+      "name": ""
+    }
+  },
+  "vrequest": {
+    "verb": "GET",
+    "uri": "https://172.19.0.2:443/factoriaustglobal/sb/today?zipcode=87897",
+    "path": "/today",
+    "headers": {
+      "host": "datapower",
+      "accept": "application/json",
+      "origin": "https://apim",
+      "apim-debug": "true",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
+      "referer": "https://apim/apim/",
+      "accept-encoding": "gzip, deflate, br",
+      "accept-language": "es-ES,es;q=0.9",
+      "via": "1.1 AAAAAF50btk-",
+      "x-client-ip": "172.19.0.8",
+      "x-global-transaction-id": "809969"
+    },
+    "date": "Wed, 28 Feb 2018 12:30:51 -05:00",
+    "authorization": "",
+    "querystring": "zipcode=87897",
+    "search": "?zipcode=87897",
+    "parameters": {
+      "zipcode": "87897"
+    }
+  },
+  "venv": {
+    "name": "sb",
+    "id": "5a81b6b8e4b0c57e468565de",
+    "path": "sb"
+  },
+  "vmessege": {
+    "status": {
+      "code": 200,
+      "reason": "OK"
+    },
+    "body": {
+      "zip": 10504,
+      "hi": 74,
+      "lo": 53,
+      "dayHumidity": 75,
+      "nightHumidity": 49,
+      "city": "Beverly Hills",
+      "state": "California",
+      "message": "Sample Randomly Generated"
+    },
+    "headers": {
+      "User-Agent": "IBM-APIConnect/API",
+      "X-Backside-Transport": "OK OK",
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json; charset=utf-8",
+      "Date": "Wed, 28 Feb 2018 17:30:51 GMT",
+      "Etag": "W/\"93-jrmD185r6OfOOVhsskJHY+Ul8t0\"",
+      "X-Powered-By": "Express",
+      "X-Global-Transaction-ID": "809969"
+    }
+  },
+  "vsystem": {
+    "datetime": "2018-02-28T17:30:51",
+    "time": "17:30:51",
+    "time.hour": "12",
+    "time.minute": "30",
+    "time.seconds": "51",
+    "date": "2018-02-28",
+    "date.day-of-week": "3",
+    "date.day-of-month": "28",
+    "date.month": "2",
+    "date.year": "2018",
+    "timezone": "-05:00"
+  }
+}

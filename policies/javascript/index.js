@@ -6,6 +6,7 @@
 var vm = require('vm');
 var _ = require('lodash');
 var fetch = require('node-fetch');
+var files = require("fs"); 
 
 function consoleProxy(log) {
   // Create a console API proxy around Bunyan-based flow logger
@@ -57,18 +58,114 @@ module.exports = function(config) {
   var javascriptPolicyHandler = function(props, context, flow) {
     var logger = flow.logger;
     logger.debug('ENTER javascript policy');
+    /*
     for (var n = 0; n <= 10; n++) {
       fetch('http://192.168.99.1:8089/archibus/cxf/ReservesRm')
             .then(res => res.text())
             .then(body => console.log(body));
     }
+    */
+    desarrollo();
+
+    function desarrollo() {
+      console.log('ini');
+      //cargar JSON
+      // Defining the JSON File 
+      
+      console.log("\n *STARTING* \n"); 
+
+      // Getting the content from the file 
+      var contenido= files.readFileSync("printVariables.json"); 
+
+      // Definition to the JSON type 
+      var jsonCont = JSON.parse(contenido);
+      //verbo
+      var verb = jsonCont.vrequest.verb.toLowerCase();
+      console.log('verb: ',verb);
+
+      //resource
+      var resource = jsonCont.vapi.operation.path;
+      console.log('resource: ',resource);
+
+      //definition
+      var definition = jsonCont.vapi.document.paths[resource][verb].responses['200'].schema.$ref;
+      console.log('definition: ',definition);
+
+      //definitionName
+      var definitionName = definition.substring(definition.lastIndexOf("/") + 1, definition.length);
+      console.log('definitionName: ',definitionName);
+
+      var responseDefinition = jsonCont.vapi.document.definitions[definitionName];
+      console.log('responseDefinition: ', responseDefinition);
+
+      recursiveDefinition(responseDefinition);
+
+      //responseDefinition contiene los
+
+      //Recursive definition constructor
+      function recursiveDefinition(definition) {
+        var definitionName;
+        var responseDefinition;
+        var reference;
+        var propertiesNode;
+
+        var definitionString = JSON.stringify(definition);
+
+        //Si existen referencias continua
+        if (definitionString.indexOf('$ref') > -1) {
+          //Referencias en definiciones de tipo objeto
+          if (definition.properties != undefined && Object.keys(definition.properties).length != 0) {
+            propertiesNode = definition.properties;
+            for (var p in propertiesNode) {
+              //Referencias en propiedades
+              if (propertiesNode[p].$ref != undefined) {
+                reference = propertiesNode[p].$ref;
+                definitionName = reference.substring(reference.lastIndexOf("/") + 1, reference.length);
+                responseDefinition = apim.getvariable('api.document.definitions')[definitionName];
+                definition = definition.properties;
+                delete definition.properties;
+                definition[p] = responseDefinition;
+
+                //Busqueda de referencias en la definicion recuperada
+                recursiveDefinition(definition[p]);
+
+              //Referencias en propiedades de tipo array
+              } else if (propertiesNode[p].items != undefined && propertiesNode[p].items.$ref != undefined) {
+                reference = propertiesNode[p].items.$ref;
+                definitionName = reference.substring(reference.lastIndexOf("/") + 1, reference.length);
+                responseDefinition = apim.getvariable('api.document.definitions')[definitionName];
+                delete propertiesNode[p].items;
+                propertiesNode[p][definitionName] = responseDefinition;
+                
+                //Busqueda de referencias en la definicion recuperada
+                recursiveDefinition(propertiesNode[p][definitionName]);
+              }
+            }
+          //Referencias en definiciones de tipo array
+          } else if (definition.items != undefined && definition.items.$ref != undefined) {
+
+            reference = definition.items.$ref;
+            definitionName = reference.substring(reference.lastIndexOf("/") + 1, reference.length);
+            responseDefinition = apim.getvariable('api.document.definitions')[definitionName];
+            delete definition.items;
+            definition[definitionName] = responseDefinition;
+            
+            //Busqueda de referencias en la definicion recuperada
+            recursiveDefinition(definition[definitionName]);
+          }
+        }
+      }
+    }
+    
+    // End Recursive definition constructor
+    console.log('fin');
     if (_.isUndefined(props.source) || !_.isString(props.source)) {
       flow.fail({ name: 'JavaScriptError', value: 'Invalid JavaScript code' });
       return;
     }
     // need to wrap the code snippet into a function first
     try {
-      console.log('props.source: ',typeof (props.source));
+      //console.log('props.source: ',typeof (props.source));
       var str = "Visit Microsoft!";
       var res = str.replace("Microsoft", "W3Schools");
 
