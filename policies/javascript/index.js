@@ -90,26 +90,40 @@ module.exports = function(config) {
       console.log('parameters: ',parameters);
 
       var requestParams = jsonCont.vrequest.parameters
-      console.log('requestParams: ',requestParams);
-      p=0;
-      var respuesta = new Object;
+      var p=0;
+      var respuesta = new Object();
+      var codDescripcion = new Object();
+
       respuesta.nombre="respuesta";
       respuesta.campos=[];
-      respuesta.campos.push("sample");
-      console.log('respuesta: ',respuesta);
+      //respuesta.campos.push(codDescripcion);
+      
       for (var p in parameters) {
         if (parameters[p].required === true){
           q=0;
-          var existe = false;
+          var existe = true;
+          
+          console.log('requestParams: ',requestParams);
           var msgsKeys = Object.keys(requestParams);
-          for (var q in msgsKeys) {
-            if (parameters[p].name === msgsKeys[q]){
-              existe=true;
-              console.log(existe);
+          if(requestParams.length === 0){
+            existe=false; 
+            codDescripcion.codigo=parameters[p].name;
+            codDescripcion.descripcion="El campo " + parameters[p].name+ "es requerido.";
+            respuesta.campos.push(codDescripcion);
+          }else{
+            for (var q in msgsKeys) {
+              if (parameters[p].name !== msgsKeys[q]){
+                existe=false; 
+                codDescripcion.codigo=parameters[p].name;
+                codDescripcion.descripcion="El campo " + parameters[p].name+ " es requerido.";
+                respuesta.campos.push(codDescripcion);
+                console.log('msgsKeys: ',msgsKeys);
+              }
             }
           }
         }
       }
+      console.log('respuesta: ',respuesta);
       /*
       //definition
       var definition = jsonCont.vapi.document.paths[resource][verb].responses['200'].schema.$ref;
