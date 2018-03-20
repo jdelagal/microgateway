@@ -79,51 +79,146 @@ module.exports = function(config) {
       var jsonCont = JSON.parse(contenido);
       //verbo
       var verb = jsonCont.vrequest.verb.toLowerCase();
-      console.log('verb: ',verb);
+      console.log('verb: '+ verb);
 
       //resource
       var resource = jsonCont.vapi.operation.path;
-      console.log('resource: ',resource);
+      console.log('resource: '+ resource);
 
       //queremos validar que los paramatros son los que tienen que ser
       var parameters = jsonCont.vapi.document.paths[resource][verb].parameters;
-      console.log('parameters: ',parameters);
+      var requestParams = jsonCont.vrequest.parameters;
+      var requestUri= jsonCont.vrequest.uri;
+       //paramatros generales del document
+      /*nodo del paramatros general
+      var nodo = jsonCont.vapi.document.parameters.paramGenerico1.name;
+      console.log('nodo: '+ nodo);
+      var paramGenerales = jsonCont.vapi.document.parameters
+      //dbglog.error('generales: '+ paramGenerales[nodo].name);*/
 
-      var requestParams = jsonCont.vrequest.parameters
+
       var p=0;
-      var respuesta = new Object();
-      var codDescripcion = new Object();
 
-      respuesta.nombre="respuesta";
-      respuesta.campos=[];
-      //respuesta.campos.push(codDescripcion);
-      
+      var respuesta={};
+      var codDescripcion={};
+      var nombre="respuesta";
+      var campos=[];
+      respuesta.nombre=nombre;
+      respuesta.campos=campos;
+      var msgsKeysString= Object.keys(requestParams).toString();
+      var valor=Object.values(requestParams);
+      var msgsKeys = Object.keys(requestParams);
+      console.log('respuesta.nombre: '+ respuesta.nombre);
+      /*POLITICA DE PARAMETROS REQUERIDOS*/
       for (var p in parameters) {
+/*POLITICA DE PARAMETROS REQUERIDOS*/
         if (parameters[p].required === true){
-          q=0;
-          var existe = true;
-          
-          console.log('requestParams: ',requestParams);
-          var msgsKeys = Object.keys(requestParams);
-          if(requestParams.length === 0){
-            existe=false; 
-            codDescripcion.codigo=parameters[p].name;
-            codDescripcion.descripcion="El campo " + parameters[p].name+ "es requerido.";
-            respuesta.campos.push(codDescripcion);
-          }else{
-            for (var q in msgsKeys) {
-              if (parameters[p].name !== msgsKeys[q]){
+            console.log('1-Requerido');
+            q=0;
+            var existe = true;            
+            if(requestParams.length === 0){
+            //no viene informado
                 existe=false; 
+                console.log('2-sin valor');
+                codDescripcion={};
                 codDescripcion.codigo=parameters[p].name;
-                codDescripcion.descripcion="El campo " + parameters[p].name+ " es requerido.";
+                codDescripcion.descripcion="El campo " + parameters[p].name + " es requerido.";
                 respuesta.campos.push(codDescripcion);
-                console.log('msgsKeys: ',msgsKeys);
+            }else{
+              //viene informado
+              console.log('3-con valor');
+              console.log('Existe parametro: ',parameters[p].name,", posicion: ",
+              msgsKeysString.search(parameters[p].name),", valor: ",valor[p], ", type", parameters[p].type);
+              if (msgsKeysString.search(parameters[p].name)===-1){
+                //no existe en la request
+                console.log("Name " + parameters[p].name + " : "+ msgsKeys);
+                for (var q in msgsKeys) {
+                  if ((parameters[p].name !== msgsKeys[q])){
+                    console.log('No existe');
+                     codDescripcion={}; 
+                     codDescripcion.codigo=parameters[p].name;
+                     codDescripcion.descripcion="El campo " + parameters[p].name+ " es requerido.";
+                     respuesta.campos.push(codDescripcion);
+                  }
+                }
+              }
+              else{
+                //existe en la request
+                console.log('Existe');
+                if (typeof(valor[p])!==parameters[p].type)
+                {
+                  codDescripcion={}; 
+                  codDescripcion.codigo=parameters[p].name;
+                  codDescripcion.descripcion="El valor del campo " + parameters[p].name+ " no es correcto, debe ser de tipo"+parameters[p].type;
+                  respuesta.campos.push(codDescripcion);
+                 }
+                 console.log('Correcto');
               }
             }
+        }
+        var ruta=jsonCont.vapi.document.parameters;
+        if (parameters[p].$ref!==undefined)
+	      {
+          var paramGenerales = parameters[p].$ref.substring(parameters[p].$ref.lastIndexOf("/")+1);
+          console.log("Name " + paramGenerales);
+          if (ruta[paramGenerales].required===true){ 
+              console.log('4-Requerido');
+              q=0;
+              var existe = true;
+              if(requestParams.length === 0){
+                  existe=false; 
+                  console.log('5-sin valor');
+                  codDescripcion={};
+                  codDescripcion.codigo=ruta[paramGenerales].name;
+                  codDescripcion.descripcion="El campo " + ruta[paramGenerales].name + " es requerido.";
+                  respuesta.campos.push(codDescripcion);
+              }else{
+                console.log('6-con valor');
+                console.log('Existe parametro:',ruta[paramGenerales].name,", posicion:",
+                msgsKeysString.search(ruta[paramGenerales].name),", valor:",valor[p], ", type:", ruta[paramGenerales].type);
+                if (msgsKeysString.search(ruta[paramGenerales].name)===-1){
+                  for (var q in msgsKeys) {
+                     if (ruta[paramGenerales].name === msgsKeys[q]){
+                      existe=false; 
+                      console.log('entra');
+                      codDescripcion={};
+                      codDescripcion.codigo=ruta[paramGenerales].name;
+                      codDescripcion.descripcion="El campo " + ruta[paramGenerales].name+ " es requerido.";
+                      respuesta.campos.push(codDescripcion);
+                     }
+                  }
+                }
+                else{
+                  //existe en la request
+                  console.log('Existe:', typeof(valor[p]));
+                  if (typeof(valor[p])!==ruta[paramGenerales].type)
+                  {
+                    codDescripcion={}; 
+                    codDescripcion.codigo=ruta[paramGenerales].name;
+                    codDescripcion.descripcion="El valor del campo " + ruta[paramGenerales].name+ " no es correcto, debe ser de tipo "+ruta[paramGenerales].type;
+                    respuesta.campos.push(codDescripcion);
+                   }
+                   console.log('Correcto');
+                }
+              }      
+            }
+          else{
+            console.log('NO OBLIGATORIO');
+            console.log('Existe:', typeof(valor[p]));
+            if (typeof(valor[p])!==ruta[paramGenerales].type)
+            {
+              codDescripcion={}; 
+              codDescripcion.codigo=ruta[paramGenerales].name;
+              codDescripcion.descripcion="El valor del campo " + ruta[paramGenerales].name+ " no es correcto, debe ser de tipo "+ruta[paramGenerales].type;
+              respuesta.campos.push(codDescripcion);
+             }
+             console.log('Correcto');
           }
         }
-      }
-      console.log('respuesta: ',respuesta);
+/*POLITICA DE TIPO DE DATOS CORRECTA DE LOS PARAMETROS*/
+
+    }
+    console.log('Parametros obligatorios: ',respuesta);
       /*
       //definition
       var definition = jsonCont.vapi.document.paths[resource][verb].responses['200'].schema.$ref;
