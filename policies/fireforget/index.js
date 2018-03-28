@@ -5,6 +5,7 @@
 'use strict';
 var vm = require('vm');
 var _ = require('lodash');
+var fetch = require('node-fetch');
 
 function consoleProxy(log) {
   // Create a console API proxy around Bunyan-based flow logger
@@ -67,7 +68,7 @@ module.exports = function(config) {
       /**
        * Logica de invocación asíncrona
        */
-      
+
       var script = new vm.Script('(function() {' + props.source + '\n})()');
       // use context as this to run the wrapped function
       // and also console for logging

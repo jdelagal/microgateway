@@ -18,6 +18,6 @@ x-ibm-configuration:
        - fireforget:
           title: write a small json object
           source: "message.body = { text : 'Fire and Forget--> procesando...' };"
-          url: "https://google.es"
+          url: "https://santanderconsumersandbox.eu-gb.mybluemix.net/fire"
 schemes:
   - http
