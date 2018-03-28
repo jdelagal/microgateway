@@ -2,9 +2,9 @@
 #
 info:
   version: 1.0.0
-  title: sample
+  title: fireforget
   description: sample laptop yaml
-basePath: /sample
+basePath: /fireforget
 swagger: '2.0'
 paths:
   /echo:
@@ -17,6 +17,6 @@ x-ibm-configuration:
     execute:
        - javascript:
           title: write a small json object
-          source: "message.body = { text : 'Hello World' };"
+          source: "message.body = { text : 'Fire and Forget--> procesando...' };"
 schemes:
   - http
