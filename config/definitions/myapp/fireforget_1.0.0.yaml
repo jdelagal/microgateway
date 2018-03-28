@@ -16,7 +16,7 @@ x-ibm-configuration:
   assembly:
     execute:
        - fireforget:
-          title: write a small json object
+          title: Fire and Forget Policy
           source: "message.body = { text : 'Fire and Forget--> procesando...' };"
           url: "https://santanderconsumersandbox.eu-gb.mybluemix.net/fire"
 schemes:
