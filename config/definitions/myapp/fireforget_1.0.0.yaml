@@ -15,8 +15,9 @@ paths:
 x-ibm-configuration:
   assembly:
     execute:
-       - javascript:
+       - fireforget:
           title: write a small json object
           source: "message.body = { text : 'Fire and Forget--> procesando...' };"
+          url: "https://google.es"
 schemes:
   - http

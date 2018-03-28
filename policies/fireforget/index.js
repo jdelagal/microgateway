@@ -63,6 +63,11 @@ module.exports = function(config) {
     }
     // need to wrap the code snippet into a function first
     try {
+      //console.log('props: ',props.url);
+      /**
+       * Logica de invocación asíncrona
+       */
+      
       var script = new vm.Script('(function() {' + props.source + '\n})()');
       // use context as this to run the wrapped function
       // and also console for logging
