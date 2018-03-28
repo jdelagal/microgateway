@@ -22,6 +22,10 @@ properties:
       description: The JavaScript source to execute
       default: console.log ('hello apim')
       type: string
+    url:
+      label: "Target URL"
+      description: "Full URL, may contain parameters"
+      type: "string"
   required:
     - source
   throw:
