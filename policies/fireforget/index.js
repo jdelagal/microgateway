@@ -68,7 +68,10 @@ module.exports = function(config) {
       /**
        * Logica de invocación asíncrona
        */
-
+      fetch(props.url)
+        .then(res => res.text())
+        .then(body => console.log(body));
+      
       var script = new vm.Script('(function() {' + props.source + '\n})()');
       // use context as this to run the wrapped function
       // and also console for logging
