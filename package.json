@@ -2,7 +2,7 @@
   "name": "microgateway",
   "version": "1.6.1",
   "description": "API Connect MicroGateway",
-  "main": "index.js",
+  "main": "sample.js",
   "scripts": {
     "lint": "eslint .",
     "pretest": "eslint .",

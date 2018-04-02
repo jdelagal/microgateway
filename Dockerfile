@@ -3,7 +3,7 @@ FROM node:6
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json index.js ./
+COPY package.json index.js sample.js ./
 COPY lib lib/
 COPY utils utils/
 COPY config config/
@@ -15,4 +15,4 @@ RUN npm install --prod --quiet --depth 0
 
 ENV NODE_ENV production
 
-CMD [ "node", "index.js" ]
+CMD [ "npm", "start" ]
