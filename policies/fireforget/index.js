@@ -6,7 +6,7 @@
 var vm = require('vm');
 var _ = require('lodash');
 var fetch = require('node-fetch');
-
+var request = require('request');
 function consoleProxy(log) {
   // Create a console API proxy around Bunyan-based flow logger
 
@@ -71,6 +71,12 @@ module.exports = function(config) {
       fetch(props.url)
         .then(res => res.text())
         .then(body => console.log(body));
+     
+      request('http://www.google.com', function (error, response, body) {
+          console.log('error:', error); // Print the error if one occurred
+          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+          console.log('body:', body); // Print the HTML for the Google homepage.
+      });
       
       var script = new vm.Script('(function() {' + props.source + '\n})()');
       // use context as this to run the wrapped function
