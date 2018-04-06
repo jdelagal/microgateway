@@ -1,0 +1,23 @@
+# sample_1.0.0.yaml
+#
+info:
+  version: 1.0.0
+  title: upload
+  description: upload
+basePath: /upload
+swagger: '2.0'
+paths:
+  /echo:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+x-ibm-configuration:
+  assembly:
+    execute:
+       - fireforget:
+          title: Fire and Forget Policy
+          source: "message.body = { text : 'Upload--> procesando...' };"
+          url: "https://santanderconsumersandbox.eu-gb.mybluemix.net/fire"
+schemes:
+  - http
