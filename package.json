@@ -130,6 +130,7 @@
     "request": "^2.85.0",
     "rolling-rate-limiter": "^0.1.4",
     "semver": "^4.1.0",
+    "then-request": "^6.0.0",
     "type-is": "^1.6.11",
     "uid-safe": "^2.1.1",
     "yamljs": "^0.2.4"
