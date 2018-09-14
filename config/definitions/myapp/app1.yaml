@@ -1,0 +1,24 @@
+info:
+  version: 1.0.0
+  title: app1
+  description: sample laptop yaml
+basePath: /app1
+swagger: '2.0'
+paths:
+  /echo:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+  /otroecho:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+x-ibm-configuration:
+  assembly:
+    execute:
+      - invoke:
+          target-url: 'https://santanderconsumersandbox.eu-gb.mybluemix.net/fire'
+schemes:
+  - http
